@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +18,41 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _handleAuth() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      if (_isLogin) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      } else {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _error = e.message;
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -43,18 +79,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: (value) => value == null || value.length < 6 ? 'Min 6 chars' : null,
               ),
               SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Dummy login/signup
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => HomeScreen()),
-                    );
-                  }
-                },
-                child: Text(_isLogin ? 'Login' : 'Sign Up'),
-              ),
+              if (_error != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Text(_error!, style: TextStyle(color: Colors.red)),
+                ),
+              _loading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          _handleAuth();
+                        }
+                      },
+                      child: Text(_isLogin ? 'Login' : 'Sign Up'),
+                    ),
               TextButton(
                 onPressed: () => setState(() => _isLogin = !_isLogin),
                 child: Text(_isLogin ? 'No account? Sign Up' : 'Have account? Login'),

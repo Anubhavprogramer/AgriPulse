@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/reading.dart';
 
+
 class ReportsScreen extends StatelessWidget {
-  final Reading latestReading;
+  final Reading? latestReading;
   const ReportsScreen({required this.latestReading, Key? key}) : super(key: key);
 
   @override
@@ -10,22 +11,24 @@ class ReportsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Latest Report')),
       body: Center(
-        child: Card(
-          margin: EdgeInsets.all(24),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Temperature: ${latestReading.temperature.toStringAsFixed(1)} °C', style: TextStyle(fontSize: 20)),
-                SizedBox(height: 12),
-                Text('Moisture: ${latestReading.moisture.toStringAsFixed(1)} %', style: TextStyle(fontSize: 20)),
-                SizedBox(height: 12),
-                Text('Time: ${_formatTime(latestReading.timestamp)}', style: TextStyle(color: Colors.grey[600])),
-              ],
-            ),
-          ),
-        ),
+        child: latestReading == null
+            ? Text('No readings yet.')
+            : Card(
+                margin: EdgeInsets.all(24),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Temperature: ${latestReading!.temperature.toStringAsFixed(1)} °C', style: TextStyle(fontSize: 20)),
+                      SizedBox(height: 12),
+                      Text('Moisture: ${latestReading!.moisture.toStringAsFixed(1)} %', style: TextStyle(fontSize: 20)),
+                      SizedBox(height: 12),
+                      Text('Time: ${_formatTime(latestReading!.timestamp)}', style: TextStyle(color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }
