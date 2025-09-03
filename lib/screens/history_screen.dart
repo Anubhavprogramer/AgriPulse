@@ -13,7 +13,7 @@ class HistoryScreen extends StatelessWidget {
         // Graph Section
         if (readings.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: SizedBox(
               height: 220,
               child: LineChart(
