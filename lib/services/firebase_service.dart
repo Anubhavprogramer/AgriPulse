@@ -35,4 +35,19 @@ class FirebaseService {
         .collection('readings')
         .add(reading.toMap());
   }
+
+  // Fetch all readings for the current user, ordered by timestamp descending
+  Future<List<Reading>> fetchReadings() async {
+    final user = currentUser;
+    if (user == null) return [];
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('readings')
+        .orderBy('timestamp', descending: true)
+        .get();
+    return snapshot.docs
+        .map((doc) => Reading.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
 }

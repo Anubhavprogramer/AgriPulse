@@ -47,9 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // ✅ Decide which tab to show
           if (_selectedIndex == 0) {
-            return DashboardScreen(
-              readings: readings,
-            );
+            return DashboardScreen();
           } else {
             return HistoryScreen(readings: readings);
           }
