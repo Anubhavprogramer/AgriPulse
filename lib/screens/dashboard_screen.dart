@@ -60,7 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: Card(
             margin: const EdgeInsets.fromLTRB(16, 24, 16, 12),
-            elevation: 6,
+            elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -132,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: Card(
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            elevation: 6,
+            elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -145,21 +145,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.receipt_long, size: 48, color: Colors.blue[700]),
+                    Icon(Icons.receipt_long, size: 48, color: Colors.green),
                     const SizedBox(height: 16),
                     Text(
                       'Latest Report',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[900],
+                        color: Colors.green,
                       ),
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadingReport ? null : _fetchLatestReading,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 40,
@@ -187,7 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 18),
                     if (_latestReading != null)
                       Card(
-                        color: Colors.blue[50],
+                        color: Colors.green[50],
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -202,7 +202,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Temp',
+                                    'Temperature',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey[700],
@@ -212,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     '${_latestReading!.temperature.toStringAsFixed(1)} °C',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: Colors.blue[900],
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -234,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     '${_latestReading!.moisture.toStringAsFixed(1)} %',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: Colors.blue[900],
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),

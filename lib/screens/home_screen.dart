@@ -32,10 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Soil Health Home"),
+        backgroundColor: Colors.green,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.black),
             tooltip: "Logout",
             onPressed: () async {
               await FirebaseService().signOut();
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        backgroundColor: Colors.green,
         onTap: _onTabTapped,
         items: const [
           BottomNavigationBarItem(
