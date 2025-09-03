@@ -33,6 +33,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Soil Health Home"),
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: "Logout",
+            onPressed: () async {
+              await FirebaseService().signOut();
+              if (!mounted) return;
+              Navigator.of(context).pushReplacementNamed('/login');
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<List<Reading>>(
         stream: FirebaseService().readingsStream(),

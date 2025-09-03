@@ -50,4 +50,9 @@ class FirebaseService {
         .map((doc) => Reading.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
   }
+
+  // Logout
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 }
