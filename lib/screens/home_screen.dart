@@ -35,50 +35,51 @@ class _HomeScreenState extends State<HomeScreen> {
     if (user == null) {
       return Center(child: Text('Not logged in'));
     }
-    return StreamBuilder<List<Reading>>(
-      stream: FirebaseService().readingsStream(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error loading readings'));
-        }
-        final readings = snapshot.data ?? [];
-        final List<Widget> _screens = [
-          ReportsScreen(latestReading: readings.isNotEmpty ? readings.first : null),
-          HistoryScreen(readings: readings),
-        ];
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(_selectedIndex == 0 ? 'Reports' : 'History'),
-            actions: _selectedIndex == 0
-                ? [
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      tooltip: 'Test (Add Reading)',
-                      onPressed: _addReading,
-                    ),
-                  ]
-                : null,
+    // Fetch readings once and keep them in memory for this session
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_selectedIndex == 0 ? 'Reports' : 'History'),
+        actions: _selectedIndex == 0
+            ? [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  tooltip: 'Test (Add Reading)',
+                  onPressed: _addReading,
+                ),
+              ]
+            : null,
+      ),
+      body: StreamBuilder<List<Reading>>(
+        stream: FirebaseService().readingsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error loading readings'));
+          }
+          final readings = snapshot.data ?? [];
+          if (_selectedIndex == 0) {
+            return ReportsScreen(latestReading: readings.isNotEmpty ? readings.first : null);
+          } else {
+            return HistoryScreen(readings: readings);
+          }
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long),
+            label: 'Reports',
           ),
-          body: _screens[_selectedIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onTabTapped,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long),
-                label: 'Reports',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history),
-                label: 'History',
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

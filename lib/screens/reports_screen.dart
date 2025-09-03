@@ -9,7 +9,7 @@ class ReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Latest Report')),
+      //appBar: AppBar(title: Text('Latest Report')),
       body: Center(
         child: latestReading == null
             ? Text('No readings yet.')
