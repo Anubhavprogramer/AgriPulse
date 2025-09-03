@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:soil_health_app/models/reading.dart';
+import 'package:soil_health_app/services/BluetoothService.dart';
 import 'package:soil_health_app/services/firebase_service.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -14,25 +15,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Reading? _latestReading;
   bool _loadingReport = false;
 
-  Future<void> _addReading() async {
+ Future<void> _addReading() async {
+  setState(() {
+    _showTestSuccess = false;
+  });
+
+  // Get reading from BluetoothService (real or mock)
+  final readingData = await BluetoothService().getReading();
+
+  final reading = Reading(
+    timestamp: DateTime.now(),
+    temperature: readingData['temperature']!,
+    moisture: readingData['moisture']!,
+  );
+  await FirebaseService().addReading(reading);
+
+  setState(() {
+    _showTestSuccess = true;
+  });
+  await Future.delayed(const Duration(seconds: 2));
+  if (mounted) {
     setState(() {
       _showTestSuccess = false;
     });
-    final reading = Reading(
-      timestamp: DateTime.now(),
-      temperature: 24 + (5 * (0.5 - (DateTime.now().second % 10) / 10)),
-      moisture: 35 + (10 * (0.5 - (DateTime.now().second % 10) / 10)),
-    );
-    await FirebaseService().addReading(reading);
-    setState(() {
-      _showTestSuccess = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted)
-      setState(() {
-        _showTestSuccess = false;
-      });
   }
+}
 
   Future<void> _fetchLatestReading() async {
     setState(() {
