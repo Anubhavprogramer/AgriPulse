@@ -1,46 +1,55 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_button.dart';
+import '../models/reading.dart';
+import 'reports_screen.dart';
+import 'history_screen.dart';
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
 
-class HomeScreen extends StatelessWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  // Dummy data for demonstration
+  final List<Reading> readings = [
+    Reading(timestamp: DateTime.now(), temperature: 24.5, moisture: 38.2),
+    Reading(timestamp: DateTime.now().subtract(Duration(hours: 1)), temperature: 23.9, moisture: 40.1),
+    Reading(timestamp: DateTime.now().subtract(Duration(hours: 2)), temperature: 25.2, moisture: 37.5),
+    Reading(timestamp: DateTime.now().subtract(Duration(hours: 3)), temperature: 24.0, moisture: 39.0),
+  ];
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _screens = [
+      ReportsScreen(latestReading: readings.first),
+      HistoryScreen(readings: readings),
+    ];
+
     return Scaffold(
-      appBar: AppBar(title: Text('Soil Health App')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Welcome to the Soil Health App!',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Easily input your soil data and get instant health analysis and recommendations.',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 40),
-            CustomButton(
-              label: 'Input Soil Data',
-              onPressed: () => Navigator.pushNamed(context, '/input'),
-            ),
-            SizedBox(height: 16),
-            CustomButton(
-              label: 'View Results',
-              onPressed: () => Navigator.pushNamed(context, '/results'),
-            ),
-            SizedBox(height: 16),
-            CustomButton(
-              label: 'About',
-              onPressed: () => Navigator.pushNamed(context, '/about'),
-            ),
-          ],
-        ),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long),
+            label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+        ],
       ),
     );
   }
 }
+
