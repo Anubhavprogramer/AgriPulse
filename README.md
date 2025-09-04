@@ -1,4 +1,4 @@
-# Soil Health App
+# AgriPulse
 
 A Flutter app for monitoring soil temperature and moisture using a Bluetooth-enabled device, with Firebase integration and offline caching.
 
