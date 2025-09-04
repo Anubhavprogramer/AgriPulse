@@ -107,6 +107,4 @@ lib/
 
 **For any issues or questions, please open an issue on GitHub.**
 
-```
-
 
