@@ -28,7 +28,7 @@ A Flutter app for monitoring soil temperature and moisture using a Bluetooth-ena
 ```sh
 git clone https://github.com/yourusername/soil_health_app.git
 cd soil_health_app
-```
+````
 
 ### 3. Install Dependencies
 
@@ -38,11 +38,11 @@ flutter pub get
 
 ### 4. Firebase Setup
 
-- Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/).
-- Add an Android app (and/or iOS app) to your Firebase project.
-- Download `google-services.json` (Android) or `GoogleService-Info.plist` (iOS).
-- Place `google-services.json` in `android/app/` and/or `GoogleService-Info.plist` in `ios/Runner/`.
-- Make sure your `android/build.gradle` and `android/app/build.gradle` are configured for Firebase (see [FlutterFire docs](https://firebase.flutter.dev/docs/overview)).
+* Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/).
+* Add an Android app (and/or iOS app) to your Firebase project.
+* Download `google-services.json` (Android) or `GoogleService-Info.plist` (iOS).
+* Place `google-services.json` in `android/app/` and/or `GoogleService-Info.plist` in `ios/Runner/`.
+* Make sure your `android/build.gradle` and `android/app/build.gradle` are configured for Firebase (see [FlutterFire docs](https://firebase.flutter.dev/docs/overview)).
 
 ### 5. Run the App
 
@@ -54,18 +54,31 @@ flutter run
 
 ## Usage
 
-- **Login/Signup:** Register or sign in with your email and password.
-- **Dashboard:** Use the "Test" button to fetch a new reading (mocked if no device is connected). Use "Reports" to view the latest reading.
-- **History:** View a graph and list of all past readings.
-- **Offline:** The last reading is cached and shown if offline.
+* **Login/Signup:** Register or sign in with your email and password.
+* **Dashboard:** Use the "Test" button to fetch a new reading (mocked if no device is connected). Use "Reports" to view the latest reading.
+* **History:** View a graph and list of all past readings.
+* **Offline:** The last reading is cached and shown if offline.
 
 ---
 
 ## Bluetooth Integration
 
-- The app uses a `BluetoothService` abstraction.
-- If no hardware is available, mock data is used.
-- When you have a real device, update `BluetoothService` to scan, connect, and read from your sensor.
+The app uses a `BluetoothService` abstraction to read data from a soil sensor.
+Currently, the following assumptions are made:
+
+* `isConnected` is always set to `false`, meaning no real hardware is connected.
+* If a real Bluetooth device is available, you can change `isConnected` to `true` and implement the `TODO` in `getReading()`.
+* When no device is connected, the app generates **mock readings** using `dart:math` and `DateTime` to simulate variation in temperature and moisture values.
+
+  ```dart
+  return {
+    'temperature': 24 + (5 * (0.5 - (now % 10) / 10)),
+    'moisture': 35 + (10 * (0.5 - (now % 10) / 10)),
+  };
+  ```
+* This ensures the app can be fully tested without hardware.
+
+When you integrate with a real device, replace the mock logic with actual Bluetooth read operations using [flutter\_blue](https://pub.dev/packages/flutter_blue).
 
 ---
 
@@ -83,14 +96,17 @@ lib/
 
 ## Dependencies
 
-- [cupertino_icons: ^1.0.8](https://pub.dev/packages/cupertino_icons)
-- [fl_chart: ^0.66.0](https://pub.dev/packages/fl_chart)
-- [firebase_core: ^2.0.0](https://pub.dev/packages/firebase_core)
-- [firebase_auth: ^4.0.0](https://pub.dev/packages/firebase_auth)
-- [cloud_firestore: ^4.0.0](https://pub.dev/packages/cloud_firestore)
-- [intl: ^0.19.0](https://pub.dev/packages/intl)
-- [flutter_blue_plus: ^1.32.0](https://pub.dev/packages/flutter_blue_plus) (Bluetooth)
-- [shared_preferences](https://pub.dev/packages/shared_preferences) (Offline cache)
+* [firebase\_core](https://pub.dev/packages/firebase_core)
+* [firebase\_auth](https://pub.dev/packages/firebase_auth)
+* [cloud\_firestore](https://pub.dev/packages/cloud_firestore)
+* [flutter\_blue](https://pub.dev/packages/flutter_blue) (Bluetooth)
+* [shared\_preferences](https://pub.dev/packages/shared_preferences) (Offline cache)
+* [fl\_chart](https://pub.dev/packages/fl_chart) (Charts)
 
 ---
+
 **For any issues or questions, please open an issue on GitHub.**
+
+```
+
+
